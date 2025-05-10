@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accedi - Servizi Biblioteche Civiche</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔑</text></svg>">
+    <link rel="stylesheet" href="Servizi Biblioteche Civiche.css">
+
+    <style>
+        /* Reset di base e stili globali */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px; /* Base per unità rem */
+        }
+
+        body {
+            /* NUOVO FONT-FAMILY */
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #f0f0f0; /* Testo chiaro per contrasto */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Previene lo scroll dovuto all'animazione di sfondo */
+            position: relative; /* Necessario per lo z-index del ::before */
+        }
+
+        /* Sfondo animato principale della pagina */
+        body::before {
+            content: "";
+            position: fixed; /* Fisso rispetto al viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2; /* Posizionato dietro a tutto, incluso il wrapper del form */
+            background: linear-gradient(
+                120deg,
+                #0099ff, /* Rosa tenue */
+                #0011ff, /* Pesca chiaro */
+                #fd00db, /* Rosa pastello */
+                #e100ff, /* Lavanda */
+                #ff0095 /* Ripetizione per un loop fluido */
+            );
+            background-size: 300% 300%; /* Dimensione maggiore per un movimento ampio */
+            animation: gradientShift 10s ease infinite; /* Animazione fluida */
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Contenitore esterno per il modulo, utile per centrare e padding */
+        .login-container-wrapper {
+            position: relative;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Modulo di Login Effettivo con effetto vetro ("glassmorphism") */
+        .login-form-container {
+            background: rgba(25, 25, 40, 0.65);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%); /* Supporto per Safari */
+            padding: 2.8rem 3.2rem;
+            border-radius: 25px;
+            border: 1.5px solid rgba(220, 220, 255, 0.12);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            animation: formEntry 1s cubic-bezier(0.165, 0.84, 0.44, 1) 0.2s forwards;
+            opacity: 0;
+            transform: translateY(40px) scale(0.97);
+        }
+
+        @keyframes formEntry {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .login-form-container h2 {
+            margin-bottom: 0.8rem;
+            font-size: 2.4rem;
+            color: #e8e8ff;
+            font-weight: 600; /* Inter ha un buon peso 600 */
+            letter-spacing: 0.5px; /* Inter potrebbe necessitare di un letter-spacing leggermente diverso */
+            text-shadow: 0 2px 5px rgba(0,0,0,0.25);
+        }
+
+        .form-subtitle {
+            font-size: 0.95rem;
+            color: #b0b0e0;
+            margin-top: -0.5rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .input-group {
+            margin-bottom: 1.6rem;
+            text-align: left;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-size: 1rem;
+            color: #c8c8f4;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input[type="text"],
+        .input-group input[type="password"] {
+            width: 100%;
+            padding: 1rem 1.1rem;
+            background-color: rgba(10, 10, 20, 0.3);
+            border: 1px solid rgba(180, 180, 255, 0.2);
+            border-radius: 12px;
+            color: #e8e8e8;
+            font-size: 1rem; /* Assicurati che il font dell'input sia coerente */
+            font-family: 'Inter', system-ui, sans-serif; /* Applica il font anche agli input */
+            transition: border-color 0.35s ease, box-shadow 0.35s ease, background-color 0.35s ease;
+            outline: none;
+        }
+
+        .input-group input[type="text"]:focus,
+        .input-group input[type="password"]:focus {
+            border-color: #9f70fd;
+            background-color: rgba(15, 15, 30, 0.4);
+            box-shadow: 0 0 0 3.5px rgba(159, 112, 253, 0.35);
+        }
+
+        .input-group input::placeholder {
+            color: rgba(200, 200, 240, 0.45);
+            font-style: italic;
+            font-weight: 300;
+             font-family: 'Inter', system-ui, sans-serif; /* Anche per il placeholder */
+        }
+
+        .input-help-text {
+            display: block;
+            font-size: 0.75rem;
+            color: rgba(180, 180, 220, 0.7);
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(90deg, #9f70fd, #7b4fe9);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease-out;
+            margin-top: 1.2rem;
+            letter-spacing: 0.5px; /* Leggermente aggiustato per Inter */
+            box-shadow: 0 5px 18px rgba(123, 79, 233, 0.45);
+            position: relative;
+            overflow: hidden;
+            font-family: 'Inter', system-ui, sans-serif; /* Anche per il bottone */
+        }
+
+        .login-button:hover,
+        .login-button:focus {
+            background: linear-gradient(90deg, #7b4fe9, #9f70fd);
+            box-shadow: 0 7px 22px rgba(123, 79, 233, 0.6);
+            transform: translateY(-3px);
+            outline: none;
+        }
+
+        .login-button:active {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 12px rgba(123, 79, 233, 0.5);
+        }
+
+        .login-button .button-text {
+            transition: opacity 0.2s ease-in-out;
+        }
+        .login-button .button-loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .login-button .button-loader .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .feedback-message {
+            min-height: 1.5em;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease, opacity 0.3s ease, max-height 0.3s ease-out;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .feedback-message.show {
+            opacity: 1;
+            max-height: 5em;
+        }
+
+        @keyframes shakeForm {
+            0%, 100% { transform: translateX(0) scale(1); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px) scale(1); }
+            20%, 40%, 60%, 80% { transform: translateX(10px) scale(1); }
+        }
+
+        .form-error-shake {
+            animation: shakeForm 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+
+        .message-success {
+            color: #76ff7a;
+        }
+        .message-error {
+            color: #ff6b6b;
+        }
+
+        .separator {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: rgba(200, 200, 255, 0.5);
+            margin: 1.8rem 0;
+            font-size: 0.85rem;
+        }
+        .separator::before,
+        .separator::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(200, 200, 255, 0.2);
+        }
+        .separator:not(:empty)::before {
+            margin-right: .5em;
+        }
+        .separator:not(:empty)::after {
+            margin-left: .5em;
+        }
+
+        .forgot-password-link {
+            display: block;
+            font-size: 0.9rem;
+            color: #b8b8e8;
+            text-decoration: none;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+            cursor: pointer; 
+        }
+        .forgot-password-link:hover {
+            color: #d8d8ff;
+            text-decoration: underline;
+            text-shadow: 0 0 5px rgba(200, 200, 255, 0.3);
+        }
+
+        .disclaimer {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.65);
+            text-align: center;
+            width: 90%;
+            max-width: 800px;
+            padding: 8px;
+            background-color: rgba(0,0,0,0.3);
+            border-radius: 5px;
+            z-index: 10;
+        }
+        .disclaimer p {
+            margin: 3px 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login-form-container {
+                padding: 1.5rem;
+                border-radius: 15px;
+            }
+
+            .login-form-container h2 {
+                font-size: 1.8rem;
+            }
+
+            .input-group input {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .login-button {
+                padding: 0.8rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                align-items: flex-start;
+                padding-top: 3vh;
+                padding-bottom: 3vh;
+            }
+            .login-container-wrapper { padding: 10px; }
+            .login-form-container {
+                padding: 1rem;
+                border-radius: 10px;
+                margin: 0 10px;
+                max-width: calc(100% - 20px);
+            }
+            .login-form-container h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+            .form-subtitle { font-size: 0.85rem; margin-bottom: 1.2rem; }
+            .input-group { margin-bottom: 1.3rem; }
+            .input-group label { font-size: 0.9rem; }
+            .input-group input[type="text"],
+            .input-group input[type="password"] { padding: 0.7rem; font-size: 0.8rem; }
+            .login-button { padding: 0.7rem; font-size: 0.9rem; }
+            .separator { margin: 1.5rem 0; }
+            .forgot-password-link { font-size: 0.85rem; }
+            .disclaimer { font-size: 0.7rem; padding: 5px; width: 95%; }
+        }
+
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-wrapper input {
+            flex: 1;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: rgba(200, 200, 240, 0.7);
+            transition: color 0.3s ease;
+        }
+
+        .toggle-password:hover {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Stile per il gruppo "Ricordami" */
+        .remember-me-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .remember-me-label {
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+            color: #c8c8f4;
+            cursor: pointer;
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .remember-me-checkbox {
+            display: none; /* Nasconde il checkbox nativo */
+        }
+
+        .custom-checkbox {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.2rem;
+            height: 1.2rem;
+            background-color: rgba(10, 10, 20, 0.3);
+            border: 1px solid rgba(180, 180, 255, 0.2);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .custom-checkbox::after {
+            content: '✔';
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .remember-me-checkbox:checked + .custom-checkbox {
+            background-color: #7b4fe9;
+            border-color: #7b4fe9;
+            box-shadow: 0 0 5px rgba(123, 79, 233, 0.5);
+        }
+
+        .remember-me-checkbox:checked + .custom-checkbox::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .remember-me-label:hover .custom-checkbox {
+            border-color: #9f70fd;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container-wrapper">
+        <div id="loginFormContainer" class="login-form-container">
+            <form id="loginForm" autocomplete="off">
+                <h2>Accedi</h2>
+                <p class="form-subtitle">Inserisci le tue credenziali per continuare.</p>
+             
+                
+                <div class="input-group">
+                    <label for="username">Nome Utente</label>
+                    <input type="text" id="username" name="username" placeholder="Es: Adam Harzafi" required aria-describedby="usernameHelp">
+                    <small id="usernameHelp" class="input-help-text">Inserire il vostro proprio nome e cognome.</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" placeholder="••••••••" required aria-describedby="passwordHelp">
+                        <span id="togglePassword" class="toggle-password" title="Mostra/Nascondi password">👁</span>
+                    </div>
+                    <small id="passwordHelp" class="input-help-text">La password viene fornita dall'amministratore</small>
+                </div>
+                
+                <!-- Aggiungi il checkbox "Ricordami" -->
+                <div class="input-group remember-me-group">
+                    <label class="remember-me-label">
+                        <input type="checkbox" id="rememberMe" class="remember-me-checkbox">
+                        <span class="custom-checkbox"></span> Ricordami
+                    </label>
+                </div>
+
+                <p id="feedbackMessage" class="feedback-message" aria-live="assertive"></p>
+
+                <button type="submit" class="login-button" id="loginButton">
+                    <span class="button-text">Accedi</span>
+                    <span class="button-loader" style="display: none;">
+                        <span class="spinner"></span> Attendere...
+                    </span>
+                </button>
+
+                <div class="separator">
+                    <span>o</span>
+                </div>
+
+                <a id="forgotPasswordLink" class="forgot-password-link">Password dimenticata?</a>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const loginFormContainer = document.getElementById('loginFormContainer');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const feedbackMessageElement = document.getElementById('feedbackMessage');
+            const loginButton = document.getElementById('loginButton');
+            const buttonText = loginButton.querySelector('.button-text');
+            const buttonLoader = loginButton.querySelector('.button-loader');
+            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+            const togglePassword = document.getElementById('togglePassword');
+
+            const CORRECT_PASSWORD = "xxadamxx";
+            const REDIRECT_URL = "Servizi Biblioteche Civiche.html"; 
+            const PROCESSING_DELAY = 700; 
+            const REDIRECT_DELAY = 1200;
+            const SHAKE_ANIMATION_DURATION = 600;
+            const EMAIL_RECIPIENT = "s11205413d@studenti.itisavogadro.it";
+
+            if (!loginForm || !loginFormContainer || !usernameInput || !passwordInput || !feedbackMessageElement || !loginButton || !buttonText || !buttonLoader || !forgotPasswordLink || !togglePassword) {
+                console.error("Errore critico: Elementi del DOM mancanti.");
+                alert("Errore nell'inizializzazione della pagina. Ricarica o contatta il supporto.");
+                return; 
+            }
+
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault(); 
+                resetFeedbackState();
+                setButtonLoadingState(true);
+                const enteredPassword = passwordInput.value;
+
+                setTimeout(() => {
+                    if (enteredPassword === CORRECT_PASSWORD) {
+                        handleLoginSuccess();
+                    } else {
+                        handleLoginFailure(enteredPassword === ""); 
+                    }
+                }, PROCESSING_DELAY);
+            });
+
+            forgotPasswordLink.addEventListener('click', function(event) {
+                event.preventDefault();
+                const subject = "Richiesta assistenza password accesso demo";
+                const body = "Buongiorno,\n\nHo dimenticato la password per l'accesso all'area dimostrativa.\n\nGrazie.";
+                const mailtoLink = `mailto:${EMAIL_RECIPIENT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                window.location.href = mailtoLink;
+            });
+
+            togglePassword.addEventListener('click', function() {
+                const isPasswordVisible = passwordInput.type === 'password';
+                passwordInput.type = isPasswordVisible ? 'text' : 'password';
+                togglePassword.textContent = isPasswordVisible ? '🙈' : '👁'; // Cambia l'icona
+            });
+
+            function handleLoginSuccess() {
+                feedbackMessageElement.textContent = 'Accesso confermato! Reindirizzamento...';
+                feedbackMessageElement.className = 'feedback-message message-success show';
+                loginFormContainer.classList.remove('form-error-shake');
+                buttonText.textContent = 'Accesso Riuscito!';
+                setTimeout(() => {
+                    window.location.href = REDIRECT_URL;
+                }, REDIRECT_DELAY);
+            }
+
+            function handleLoginFailure(isPasswordEmpty) {
+                if (isPasswordEmpty) {
+                    feedbackMessageElement.textContent = 'Il campo password non può essere vuoto.';
+                } else {
+                    feedbackMessageElement.textContent = 'Password errata. Riprova.';
+                }
+                feedbackMessageElement.className = 'feedback-message message-error show';
+                loginFormContainer.classList.add('form-error-shake');
+                passwordInput.value = '';
+                passwordInput.focus();
+                setTimeout(() => {
+                    loginFormContainer.classList.remove('form-error-shake');
+                }, SHAKE_ANIMATION_DURATION);
+                setButtonLoadingState(false);
+            }
+
+            function resetFeedbackState() {
+                feedbackMessageElement.textContent = '';
+                feedbackMessageElement.className = 'feedback-message';
+                loginFormContainer.classList.remove('form-error-shake');
+            }
+            
+            function setButtonLoadingState(isLoading) {
+                if (isLoading) {
+                    loginButton.disabled = true;
+                    buttonText.style.opacity = '0';
+                    buttonLoader.style.display = 'flex'; 
+                    setTimeout(() => { if(buttonText.style.opacity === '0') buttonText.style.display = 'none'; }, 200);
+                } else {
+                    loginButton.disabled = false;
+                    buttonText.style.display = 'inline';
+                    buttonText.style.opacity = '1';
+                    buttonLoader.style.display = 'none';
+                    buttonText.textContent = 'Accedi';
+                }
+            }
+
+            console.warn(
+                "SCRIPT DI LOGIN DIMOSTRATIVO ATTIVO.\n" +
+                "Password hardcoded: '" + CORRECT_PASSWORD + "'.\n" +
+                "Questa implementazione NON È SICURA per produzione."
+            );
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const rememberMeCheckbox = document.getElementById('rememberMe');
+            const CORRECT_PASSWORD = "xxadamxx";
+            const REDIRECT_URL = "Servizi Biblioteche Civiche.html";
+
+            // Controlla se esiste un nome utente salvato nel localStorage
+            const savedUsername = localStorage.getItem('rememberedUsername');
+            if (savedUsername) {
+                usernameInput.value = savedUsername;
+                rememberMeCheckbox.checked = true; // Se c'è un nome utente salvato, seleziona il checkbox
+            }
+
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const enteredUsername = usernameInput.value.trim();
+                const enteredPassword = passwordInput.value;
+
+                if (enteredPassword === CORRECT_PASSWORD) {
+                    if (rememberMeCheckbox.checked) {
+                        // Salva il nome utente nel localStorage se "Ricordami" è selezionato
+                        localStorage.setItem('rememberedUsername', enteredUsername);
+                    } else {
+                        // Rimuovi il nome utente salvato se "Ricordami" non è selezionato
+                        localStorage.removeItem('rememberedUsername');
+                    }
+                    window.location.href = REDIRECT_URL; // Reindirizza alla pagina principale
+                } else {
+                    alert('Password errata. Riprova.');
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const rememberMeCheckbox = document.getElementById('rememberMe');
+            const CORRECT_PASSWORD = "xxadamxx";
+            const REDIRECT_URL = "Servizi Biblioteche Civiche.html";
+
+            // Controlla se esiste un nome utente salvato nel localStorage
+            const savedUsername = localStorage.getItem('rememberedUsername');
+            if (savedUsername) {
+                usernameInput.value = savedUsername;
+                rememberMeCheckbox.checked = true; // Se c'è un nome utente salvato, seleziona il checkbox
+            }
+
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const enteredUsername = usernameInput.value.trim();
+                const enteredPassword = passwordInput.value;
+
+                if (enteredPassword === CORRECT_PASSWORD) {
+                    localStorage.setItem('loggedInUser', enteredUsername); // Salva il nome utente
+                    window.location.href = 'Servizi Biblioteche Civiche.html'; // Reindirizza alla pagina principale
+                } else {
+                    alert('Password errata. Riprova.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
