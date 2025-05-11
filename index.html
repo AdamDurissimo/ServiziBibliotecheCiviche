@@ -6,8 +6,6 @@
     <title>Accedi - Servizi Biblioteche Civiche</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔑</text></svg>">
-    <link rel="stylesheet" href="Servizi Biblioteche Civiche.css">
-
     <style>
         /* Reset di base e stili globali */
         *,
@@ -428,7 +426,7 @@
                     <span>o</span>
                 </div>
 
-                <a id="forgotPasswordLink" class="forgot-password-link">Password dimenticata?</a>
+                <a href="recupero_password.html" class="forgot-password-link">Password dimenticata?</a>
             </form>
         </div>
     </div>
@@ -444,7 +442,7 @@
             const loginButton = document.getElementById('loginButton');
             const buttonText = loginButton.querySelector('.button-text');
             const buttonLoader = loginButton.querySelector('.button-loader');
-            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+            // const forgotPasswordLink = document.getElementById('forgotPasswordLink'); // Non più gestito da JS qui
             const togglePassword = document.getElementById('togglePassword');
 
             // --- Configurazione ---
@@ -453,7 +451,7 @@
             const PROCESSING_DELAY = 700;
             const REDIRECT_DELAY = 1200;
             const SHAKE_ANIMATION_DURATION = 600;
-            const EMAIL_RECIPIENT = "s11205413d@studenti.itisavogadro.it";
+            // const EMAIL_RECIPIENT = "s11205413d@studenti.itisavogadro.it"; // Non più usato qui
 
             // --- Configurazione Blocco Tentativi ---
             const MAX_LOGIN_ATTEMPTS = 3;
@@ -461,10 +459,9 @@
             const LOCKOUT_STORAGE_KEY = 'loginLockoutState';
             let lockoutInterval = null; // Per il timer del countdown
 
-            // Stato del blocco (letto da localStorage)
             let lockoutState = {
                 attempts: 0,
-                lockoutUntil: 0 // Timestamp in millisecondi
+                lockoutUntil: 0 
             };
 
             function loadLockoutState() {
@@ -482,8 +479,8 @@
                 lockoutState.attempts = 0;
                 lockoutState.lockoutUntil = 0;
                 saveLockoutState();
-                clearTimeout(lockoutInterval); // Pulisce il timer se attivo
-                enableForm(); // Riabilita il form
+                clearTimeout(lockoutInterval); 
+                enableForm(); 
             }
 
             function formatTime(seconds) {
@@ -515,7 +512,7 @@
                         resetLockoutState();
                         feedbackMessageElement.textContent = 'Blocco terminato. Puoi tentare nuovamente l\'accesso.';
                         feedbackMessageElement.className = 'feedback-message message-success show';
-                         setTimeout(resetFeedbackState, 3000); // Pulisce il messaggio dopo un po'
+                         setTimeout(resetFeedbackState, 3000); 
                     }
                 }, 1000);
             }
@@ -525,11 +522,11 @@
                 passwordInput.disabled = true;
                 loginButton.disabled = true;
                 rememberMeCheckbox.disabled = true;
-                 if(buttonLoader.style.display === 'flex') { // Se il loader è attivo, resettalo
-                    setButtonLoadingState(false); // Questo riabilita il bottone, quindi dobbiamo disabilitarlo di nuovo
+                 if(buttonLoader.style.display === 'flex') { 
+                    setButtonLoadingState(false); 
                     loginButton.disabled = true; 
                  }
-                 buttonText.textContent = "Bloccato"; // Cambia testo bottone durante il blocco
+                 buttonText.textContent = "Bloccato"; 
             }
 
             function enableForm() {
@@ -537,26 +534,24 @@
                 passwordInput.disabled = false;
                 loginButton.disabled = false;
                 rememberMeCheckbox.disabled = false;
-                buttonText.textContent = "Accedi"; // Ripristina testo bottone
+                buttonText.textContent = "Accedi"; 
             }
 
-
-            // Controllo elementi DOM essenziali
-            if (!loginForm || !loginFormContainer || !usernameInput || !passwordInput || !feedbackMessageElement || !loginButton || !buttonText || !buttonLoader || !forgotPasswordLink || !togglePassword || !rememberMeCheckbox) {
+            if (!loginForm || !loginFormContainer || !usernameInput || !passwordInput || !feedbackMessageElement || !loginButton || !buttonText || !buttonLoader || !togglePassword || !rememberMeCheckbox) {
                 console.error("Errore critico: Elementi del DOM mancanti.");
-                feedbackMessageElement.textContent = "Errore di inizializzazione. Ricarica la pagina.";
-                feedbackMessageElement.className = 'feedback-message message-error show';
+                if (feedbackMessageElement) { // Verifica che feedbackMessageElement esista prima di usarlo
+                    feedbackMessageElement.textContent = "Errore di inizializzazione. Ricarica la pagina.";
+                    feedbackMessageElement.className = 'feedback-message message-error show';
+                }
                 return; 
             }
 
-            loadLockoutState(); // Carica stato blocco all'avvio
+            loadLockoutState(); 
 
-            // Se l'utente è già bloccato al caricamento della pagina
             if (lockoutState.lockoutUntil > Date.now()) {
                 startLockoutCountdown();
             }
 
-            // Recupera username se "Ricordami" era stato selezionato
             const savedUsername = localStorage.getItem('rememberedUsername');
             if (savedUsername) {
                 usernameInput.value = savedUsername;
@@ -566,11 +561,7 @@
             loginForm.addEventListener('submit', function(event) {
                 event.preventDefault(); 
                 
-                // Controlla se l'utente è attualmente bloccato
                 if (lockoutState.lockoutUntil > Date.now()) {
-                    // Se è bloccato, aggiorna il messaggio e non procedere
-                    // startLockoutCountdown() dovrebbe essere già in esecuzione se la pagina è stata ricaricata
-                    // o se il blocco è appena iniziato. Se non lo è, lo avvia.
                     if(!lockoutInterval && (lockoutState.lockoutUntil > Date.now())) {
                         startLockoutCountdown();
                     }
@@ -585,7 +576,7 @@
 
                 setTimeout(() => {
                     if (enteredPassword === CORRECT_PASSWORD) {
-                        resetLockoutState(); // Resetta tentativi e blocco in caso di successo
+                        resetLockoutState(); 
                         if (rememberMeCheckbox.checked && enteredUsername) {
                             localStorage.setItem('rememberedUsername', enteredUsername);
                         } else {
@@ -599,21 +590,11 @@
                 }, PROCESSING_DELAY);
             });
 
-            forgotPasswordLink.addEventListener('click', function(event) {
-                event.preventDefault();
-                if (lockoutState.lockoutUntil > Date.now()) { // Non permettere se bloccato
-                     feedbackMessageElement.textContent = `Attendi la fine del blocco per usare questa funzione.`;
-                     feedbackMessageElement.className = 'feedback-message message-lockout show';
-                    return;
-                }
-                const subject = "Richiesta assistenza password accesso demo";
-                const body = "Buongiorno,\n\nHo dimenticato la password per l'accesso all'area dimostrativa.\nUtente: " + (usernameInput.value.trim() || "[Non specificato]") + "\n\nGrazie.";
-                const mailtoLink = `mailto:${EMAIL_RECIPIENT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                window.location.href = mailtoLink;
-            });
+            // RIMOSSO: La logica per forgotPasswordLink è ora nella pagina recupero_password.html
+            // forgotPasswordLink.addEventListener('click', function(event) { ... });
 
             togglePassword.addEventListener('click', function() {
-                if (usernameInput.disabled) return; // Non permettere se il form è disabilitato
+                if (usernameInput.disabled) return; 
                 const isPasswordVisible = passwordInput.type === 'password';
                 passwordInput.type = isPasswordVisible ? 'text' : 'password';
                 togglePassword.textContent = isPasswordVisible ? '🙈' : '👁'; 
@@ -624,7 +605,6 @@
                 feedbackMessageElement.className = 'feedback-message message-success show';
                 loginFormContainer.classList.remove('form-error-shake');
                 buttonText.textContent = 'Accesso Riuscito!';
-                // setButtonLoadingState(true) è già stato chiamato, quindi il bottone è disabilitato
                 setTimeout(() => {
                     window.location.href = REDIRECT_URL;
                 }, REDIRECT_DELAY);
@@ -633,12 +613,12 @@
             function handleLoginFailure(isPasswordEmpty) {
                 lockoutState.attempts++;
                 saveLockoutState();
-                setButtonLoadingState(false); // Riabilita il bottone momentaneamente per mostrare errore
+                setButtonLoadingState(false); 
 
                 if (lockoutState.attempts >= MAX_LOGIN_ATTEMPTS) {
                     lockoutState.lockoutUntil = Date.now() + (LOCKOUT_DURATION_SECONDS * 1000);
                     saveLockoutState();
-                    startLockoutCountdown(); // Avvia il blocco e il countdown
+                    startLockoutCountdown(); 
                 } else {
                     if (isPasswordEmpty) {
                         feedbackMessageElement.textContent = 'Il campo password non può essere vuoto. Inseriscila.';
@@ -657,7 +637,6 @@
             }
 
             function resetFeedbackState() {
-                // Non pulire il messaggio se è un messaggio di lockout attivo
                 if (lockoutState.lockoutUntil <= Date.now()) {
                     feedbackMessageElement.textContent = '';
                     feedbackMessageElement.className = 'feedback-message';
@@ -666,20 +645,18 @@
             }
             
             function setButtonLoadingState(isLoading) {
-                // Se stiamo entrando in stato di loading e il form non è già disabilitato dal blocco
                 if (isLoading && !usernameInput.disabled) {
                     loginButton.disabled = true;
                     buttonText.style.opacity = '0';
                     buttonLoader.style.display = 'flex'; 
                     setTimeout(() => { if(buttonText.style.opacity === '0') buttonText.style.display = 'none'; }, 200);
-                } else if (!isLoading && !usernameInput.disabled) { // Se stiamo uscendo dallo stato di loading e il form non è bloccato
+                } else if (!isLoading && !usernameInput.disabled) { 
                     loginButton.disabled = false;
                     buttonText.style.display = 'inline';
                     buttonText.style.opacity = '1';
                     buttonLoader.style.display = 'none';
                     buttonText.textContent = 'Accedi';
                 }
-                // Se il form è bloccato (usernameInput.disabled è true), lo stato del bottone è gestito da disableForm/enableForm
             }
 
             console.warn(
